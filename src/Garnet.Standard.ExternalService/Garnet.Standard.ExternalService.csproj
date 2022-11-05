@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>10</LangVersion>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <PackageId>Garnet.Standard.ExternalService</PackageId>
+        <Authors>Garnet</Authors>
+        <Company>Garnet</Company>
+        <PackageProjectUrl>https://github.com/Abbas-b-b/Garnet.ExternalService</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Abbas-b-b/Garnet.ExternalService.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <Deterministic>true</Deterministic>
+        <Title>Garnet.ExternalService</Title>
+        <Description>Boilerplate codes for integrating with external services</Description>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>ExternalService;REST;http</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+        <Copyright>Copyright © Garnet</Copyright>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+</Project>
