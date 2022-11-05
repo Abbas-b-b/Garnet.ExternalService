@@ -18,6 +18,7 @@
         <Deterministic>true</Deterministic>
         <Title>Garnet.ExternalService</Title>
         <Description>Boilerplate codes for integrating with external services</Description>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>ExternalService;REST;http</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -27,6 +28,14 @@
 
     <ItemGroup>
         <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+        <PackageReference Include="MinVer" Version="3.1.0">
+            <PrivateAssets>All</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
 </Project>
