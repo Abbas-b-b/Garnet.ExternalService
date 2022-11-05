@@ -1,0 +1,18 @@
+name: 'Garnet.Detail.ExternalService.Rest_CICD'
+
+on:
+  push:
+    paths:
+    - 'src/Garnet.Detail.ExternalService.Rest/**'
+    tags:
+    - '*.*.*'
+
+jobs:
+  pack_push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pack and Push
+      uses: Abbas-b-b/Garnet.Github.Actions/dotnet_checkout_pack_push@master
+      with:
+        project-path: 'src/Garnet.Detail.ExternalService.Rest/'
+        nuget-api-key: ${{ secrets.NUGET_API_KEY }}
