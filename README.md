@@ -1,6 +1,6 @@
 # Garnet External Service
 
-Makes external service integration more easy by providing some boilerplate codes.
+Makes external service integration easier by providing some boilerplate codes.
 
 ## Garnet.Standard.ExternalService [![Nuget](https://img.shields.io/nuget/dt/Garnet.Standard.ExternalService?style=for-the-badge)](https://www.nuget.org/packages/Garnet.Standard.ExternalService/)
 
@@ -9,6 +9,8 @@ Makes external service integration more easy by providing some boilerplate codes
 The idea behind standard packages is not to mess with the domain or application layer with implementation details. this package holds configuration DTOs and other shared info
 
 ## Garnet.Detail.ExternalService.Rest [![Nuget](https://img.shields.io/nuget/dt/Garnet.Detail.ExternalService.Rest?style=for-the-badge)](https://www.nuget.org/packages/Garnet.Detail.ExternalService.Rest/)
+
+    dotnet add package Garnet.Standard.ExternalService
 
 This package is based on [RestSharp](https://restsharp.dev/) and provides these clients:
 
