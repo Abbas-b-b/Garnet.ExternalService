@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Garnet.Detail.ExternalService.Rest.Utilities;
-using Garnet.Standard.ExternalService;
 using Garnet.Standard.ExternalService.Configurations;
+using Garnet.Standard.ExternalService.Exceptions;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
@@ -73,7 +73,7 @@ public abstract class BasicRestClient
 
         if (IsSuccessResponse(restResponse))
         {
-            return Client.Deserialize<TResponse>(restResponse).Data;
+            return DeserializeResponse<TResponse>(restResponse);
         }
 
         LogFailedResponseReceived(restRequest, restResponse);
@@ -111,6 +111,27 @@ public abstract class BasicRestClient
         return ClientFactory.CreateRestClient(ClientConfiguration);
     }
 
+    /// <summary>
+    /// Deserialize response
+    /// </summary>
+    /// <param name="restResponse">To get the response content from</param>
+    /// <typeparam name="TResponse">The type to deserialize to</typeparam>
+    /// <returns>Deserialized object</returns>
+    public virtual TResponse DeserializeResponse<TResponse>(RestResponse restResponse) where TResponse : class
+    {
+        var result = Client.Deserialize<TResponse>(restResponse);
+
+        if (result.Data is not null)
+        {
+            return result.Data;
+        }
+
+        Logger.LogError("Could not deserialize response content {content}. The error {error} and exception {@exception}", 
+            result.Content, result.ErrorMessage, result.ErrorException);
+
+        throw new ResponseDeserializeException();
+    }
+    
     /// <summary>
     /// 
     /// </summary>

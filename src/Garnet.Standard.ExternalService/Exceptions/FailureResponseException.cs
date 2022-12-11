@@ -1,6 +1,6 @@
 using System;
 
-namespace Garnet.Standard.ExternalService;
+namespace Garnet.Standard.ExternalService.Exceptions;
 
 /// <summary>
 /// An exception that is used when a failed response has been received
