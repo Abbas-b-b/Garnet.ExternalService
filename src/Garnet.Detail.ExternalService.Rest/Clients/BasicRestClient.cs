@@ -159,12 +159,13 @@ public abstract class BasicRestClient
     /// <param name="restResponse"></param>
     protected void LogFailedResponseReceived(RestRequest restRequest, RestResponse restResponse)
     {
-        Logger.LogWarning(
-            "A {httpMethod} request to {uri} with parameters {@parameters} has been failed with status {status} and content: {content}",
+        Logger.LogError(restResponse.ErrorException,
+            "A {httpMethod} request to {uri} with parameters {@parameters} has been failed with status {status} and error: {error} and content: {content}",
             restRequest.Method,
             restRequest.Resource,
             restRequest.Parameters.ToList(),
             restResponse.StatusCode,
+            restResponse.ErrorMessage,
             restResponse.Content);
     }
 }
