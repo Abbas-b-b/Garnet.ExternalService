@@ -50,7 +50,11 @@ public class RequestUtility
         {
             foreach (var prop in requestData.GetType().GetProperties())
             {
-                var value = prop.GetValue(requestData).ToString();
+                var value = prop.GetValue(requestData)?.ToString();
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    continue;
+                }
                 
                 request.AddParameter(prop.Name, value);
             }
