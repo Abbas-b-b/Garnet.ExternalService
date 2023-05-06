@@ -45,10 +45,15 @@ public abstract class BasicRestClient
     /// </summary>
     /// <param name="request">RestSharp request to send</param>
     /// <returns>RestResponse</returns>
-    public virtual Task<RestResponse> SendRequestAsync(RestRequest request)
+    public virtual async Task<RestResponse> SendRequestAsync(RestRequest request)
     {
-        return
-            Client.ExecuteAsync(request);
+        LogRequestBeforeSending(request);
+        
+        var response = await Client.ExecuteAsync(request);
+        
+        LogResponseReceived(response);
+    
+        return response;
     }
 
     /// <summary>
@@ -65,11 +70,9 @@ public abstract class BasicRestClient
         where TRequest : class
         where TResponse : class
     {
-        var restRequest = RequestUtility.CreateRestRequestAndAddParameters(uri, httpMethod, request);
+        var restRequest = CreateRestRequestAndAddParameters(uri, httpMethod, request);
 
-        LogRequestBeforeSending(restRequest);
         var restResponse = await SendRequestAsync(restRequest);
-        LogResponseReceived(restResponse);
 
         if (IsSuccessResponse(restResponse))
         {
@@ -81,13 +84,25 @@ public abstract class BasicRestClient
     }
 
     /// <summary>
+    /// This method is for creating a <see cref="RestRequest"/> and adding the necessary parameters. This method is seperated to easily override it to support more request types
+    /// </summary>
+    /// <param name="uri">The relative path of the request</param>
+    /// <param name="httpMethod">Request http method</param>
+    /// <param name="requestData">An object to fetch parameters from</param>
+    /// <returns>RestSharp request after adding the parameters</returns>
+    protected virtual RestRequest CreateRestRequestAndAddParameters(string uri, Method httpMethod, object requestData)
+    {
+        return RequestUtility.CreateRestRequestAndAddParameters(uri, httpMethod, requestData);
+    }
+
+    /// <summary>
     /// What to do on failure response
     /// </summary>
     /// <param name="restResponse">The failure response</param>
     /// <typeparam name="TResponse">Type of the response</typeparam>
     /// <returns>What to return if failure occured</returns>
     /// <exception cref="FailureResponseException">Default behavior</exception>
-    public virtual TResponse HandleFailure<TResponse>(RestResponse restResponse) where TResponse : class
+    protected virtual TResponse HandleFailure<TResponse>(RestResponse restResponse) where TResponse : class
     {
         throw new FailureResponseException();
     }
@@ -97,7 +112,7 @@ public abstract class BasicRestClient
     /// </summary>
     /// <param name="response">RestSharp RestResponse</param>
     /// <returns>whether the response a failure or not</returns>
-    public virtual bool IsSuccessResponse(RestResponse response)
+    protected virtual bool IsSuccessResponse(RestResponse response)
     {
         return response.IsSuccessful;
     }
