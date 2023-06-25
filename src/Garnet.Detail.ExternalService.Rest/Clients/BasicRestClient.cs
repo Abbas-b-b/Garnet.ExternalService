@@ -52,6 +52,11 @@ public abstract class BasicRestClient
         var response = await Client.ExecuteAsync(request);
         
         LogResponseReceived(response);
+
+        if (ClientConfiguration.LogRequestResponseWithContents)
+        {
+            LogRequestResponse(request, response);
+        }
     
         return response;
     }
@@ -165,6 +170,24 @@ public abstract class BasicRestClient
     protected void LogResponseReceived(RestResponse restResponse)
     {
         Logger.LogInformation("A response received with status {status}", restResponse.StatusCode);
+    }
+
+    /// <summary>
+    /// Logs request along with response including request parameters and response content
+    /// </summary>
+    /// <param name="restRequest"></param>
+    /// <param name="restResponse"></param>
+    protected void LogRequestResponse(RestRequest restRequest, RestResponse restResponse)
+    {
+        using (Logger.BeginScope("Request_Response_Log"))
+        {
+            Logger.LogInformation("A {httpMethod} request to {uri} with parameters {@parameters} has been sent with response status {status} and content: {content}",
+                restRequest.Method,
+                restRequest.Resource,
+                restRequest.Parameters.ToList(),
+                restResponse.StatusCode,
+                restResponse.Content);
+        }
     }
 
     /// <summary>

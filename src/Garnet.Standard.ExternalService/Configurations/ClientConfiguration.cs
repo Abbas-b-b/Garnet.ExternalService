@@ -9,4 +9,9 @@ public class ClientConfiguration
     /// Base uri for the client to send the requests to
     /// </summary>
     public string BaseUri { get; set; }
+
+    /// <summary>
+    /// Indicates request response logging
+    /// </summary>
+    public bool LogRequestResponseWithContents { get; set; } = true;
 }
