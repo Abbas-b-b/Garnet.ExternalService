@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Garnet.Detail.ExternalService.Rest.Utilities;
 using Garnet.Standard.ExternalService.Configurations;
@@ -48,14 +50,16 @@ public abstract class BasicRestClient
     public virtual async Task<RestResponse> SendRequestAsync(RestRequest request)
     {
         LogRequestBeforeSending(request);
-        
+
+        var stopwatch = Stopwatch.StartNew();
         var response = await Client.ExecuteAsync(request);
+        stopwatch.Stop();
         
         LogResponseReceived(response);
 
         if (ClientConfiguration.LogRequestResponseWithContents)
         {
-            LogRequestResponse(request, response);
+            LogRequestResponse(request, response, stopwatch.Elapsed);
         }
     
         return response;
@@ -177,13 +181,15 @@ public abstract class BasicRestClient
     /// </summary>
     /// <param name="restRequest"></param>
     /// <param name="restResponse"></param>
-    protected void LogRequestResponse(RestRequest restRequest, RestResponse restResponse)
+    /// <param name="executionTime"></param>
+    protected void LogRequestResponse(RestRequest restRequest, RestResponse restResponse, TimeSpan executionTime)
     {
         using (Logger.BeginScope("Request_Response_Log"))
         {
-            Logger.LogInformation("A {httpMethod} request to {uri} with parameters {@parameters} has been sent with response status {status} and content: {content}",
+            Logger.LogInformation("A {httpMethod} request to {uri} in {executionTime} ms with parameters {@parameters} has been sent with response status {status} and content: {content}",
                 restRequest.Method,
                 restRequest.Resource,
+                executionTime.TotalMilliseconds,
                 restRequest.Parameters.ToList(),
                 restResponse.StatusCode,
                 restResponse.Content);
