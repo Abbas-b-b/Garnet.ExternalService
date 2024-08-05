@@ -1,3 +1,5 @@
+using System;
+using System.Text.RegularExpressions;
 using RestSharp;
 
 namespace Garnet.Detail.ExternalService.Rest.Utilities;
@@ -13,14 +15,53 @@ public class RequestUtility
     /// <param name="uri">The relative path of the request</param>
     /// <param name="httpMethod">Request http method</param>
     /// <param name="requestData">An object to fetch parameters from</param>
+    /// <param name="urlSegmentValues">List of values to replace route arguments</param>
     /// <returns>RestSharp request after adding the parameters</returns>
-    public static RestRequest CreateRestRequestAndAddParameters(string uri, Method httpMethod, object requestData)
+    public static RestRequest CreateRestRequestAndAddParameters(string uri, Method httpMethod, object requestData,
+        params object?[] urlSegmentValues)
     {
         var request = CreateRestRequest(uri, httpMethod);
+
+        AddUrlSegmentParameters(request, urlSegmentValues);
 
         AddParametersToTheRequest(request, requestData);
 
         return request;
+    }
+
+    /// <summary>
+    /// Add url segment to the <paramref name="request"/> to fill route values
+    /// </summary>
+    /// <param name="request">RestSharp request to add parameters to</param>
+    /// <param name="urlSegmentValues">List of values to replace route arguments</param>
+    /// <exception cref="ArgumentNullException">When <paramref name="urlSegmentValues"/> is null</exception>
+    public static void AddUrlSegmentParameters(RestRequest request, params object?[] urlSegmentValues)
+    {
+        if (urlSegmentValues is null || urlSegmentValues.Length <= 0)
+        {
+            return;
+        }
+
+        var matches = new Regex(@"\{(.*?)\}").Matches(request.Resource);
+
+        for (var i = 0; i < matches.Count; i++)
+        {
+            var name = matches[i].Groups[1].Value;
+
+            if (i >= urlSegmentValues.Length)
+            {
+                break;
+            }
+
+            var value = urlSegmentValues[i]?.ToString();
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(urlSegmentValues),
+                    $"Value in {nameof(urlSegmentValues)} cannot be null");
+            }
+
+            request.AddUrlSegment(name, value);
+        }
     }
 
     /// <summary>
@@ -55,8 +96,15 @@ public class RequestUtility
                 {
                     continue;
                 }
-                
-                request.AddParameter(prop.Name, value);
+
+                if (request.Resource.Contains(prop.Name))
+                {
+                    request.AddUrlSegment(prop.Name, value);
+                }
+                else
+                {
+                    request.AddParameter(prop.Name, value);
+                }
             }
         }
         else

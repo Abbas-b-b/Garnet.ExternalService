@@ -71,15 +71,18 @@ public abstract class BasicRestClient
     /// <param name="uri">Relative path for the request</param>
     /// <param name="httpMethod">HttpMethod of the request</param>
     /// <param name="request">Request parameters which will be added to the body or query parameters in respect to the request method (GET or not)</param>
+    /// <param name="urlSegmentValues">List of values to replace route arguments</param>
     /// <typeparam name="TRequest">Type of the request object</typeparam>
     /// <typeparam name="TResponse">Type of the response object</typeparam>
     /// <returns>Response object if request is success</returns>
-    public virtual async Task<TResponse> SendRequestAsync<TRequest, TResponse>(string uri, Method httpMethod,
-        TRequest request)
+    public virtual async Task<TResponse> SendRequestAsync<TRequest, TResponse>(string uri,
+        Method httpMethod,
+        TRequest request,
+        params object?[] urlSegmentValues)
         where TRequest : class
         where TResponse : class
     {
-        var restRequest = CreateRestRequestAndAddParameters(uri, httpMethod, request);
+        var restRequest = CreateRestRequestAndAddParameters(uri, httpMethod, request, urlSegmentValues);
 
         var restResponse = await SendRequestAsync(restRequest);
 
@@ -98,10 +101,12 @@ public abstract class BasicRestClient
     /// <param name="uri">The relative path of the request</param>
     /// <param name="httpMethod">Request http method</param>
     /// <param name="requestData">An object to fetch parameters from</param>
+    /// <param name="urlSegmentValues">List of values to replace route arguments</param>
     /// <returns>RestSharp request after adding the parameters</returns>
-    protected virtual RestRequest CreateRestRequestAndAddParameters(string uri, Method httpMethod, object requestData)
+    protected virtual RestRequest CreateRestRequestAndAddParameters(string uri, Method httpMethod, object requestData,
+        params object?[] urlSegmentValues)
     {
-        return RequestUtility.CreateRestRequestAndAddParameters(uri, httpMethod, requestData);
+        return RequestUtility.CreateRestRequestAndAddParameters(uri, httpMethod, requestData, urlSegmentValues);
     }
 
     /// <summary>
@@ -186,8 +191,9 @@ public abstract class BasicRestClient
     {
         using (Logger.BeginScope("Request_Response_Log"))
         {
-            Logger.LogInformation("A {$httpMethod} request to {$uri} in {$executionTime} ms with parameters {@parameters} has been sent with response status {$status} and content: {$content}",
+            Logger.LogInformation("A {$httpMethod} request to {$baseUri} with route {$route} in {$executionTime} ms with parameters {@parameters} has been sent with response status {$status} and content: {$content}",
                 restRequest.Method,
+                Client.Options.BaseUrl,
                 restRequest.Resource,
                 executionTime.TotalMilliseconds,
                 restRequest.Parameters.ToList(),
@@ -203,9 +209,10 @@ public abstract class BasicRestClient
     /// <param name="restResponse"></param>
     protected void LogFailedResponseReceived(RestRequest restRequest, RestResponse restResponse)
     {
-        Logger.LogError(restResponse.ErrorException,
-            "A {$httpMethod} request to {$uri} with parameters {@parameters} has been failed with status {$status} and error: {$error} and content: {$content}",
+        Logger.LogError(restResponse.ErrorException, 
+            "A {$httpMethod} request to {$baseUri} with route {$uri} with parameters {@parameters} has been failed with status {$status} and error: {$error} and content: {$content}",
             restRequest.Method,
+            Client.Options.BaseUrl,
             restRequest.Resource,
             restRequest.Parameters.ToList(),
             restResponse.StatusCode,
