@@ -162,7 +162,7 @@ public abstract class BasicRestClient
     /// <param name="restRequest"></param>
     protected void LogRequestBeforeSending(RestRequest restRequest)
     {
-        Logger.LogInformation("A {$httpMethod} request is about to send to {$uri}",
+        Logger.LogDebug("A {$httpMethod} request is about to send to {$uri}",
             restRequest.Method,
             restRequest.Resource);
     }
@@ -173,7 +173,7 @@ public abstract class BasicRestClient
     /// <param name="restResponse"></param>
     protected void LogResponseReceived(RestResponse restResponse)
     {
-        Logger.LogInformation("A response received with status {$status}", restResponse.StatusCode);
+        Logger.LogDebug("A response received with status {$status}", restResponse.StatusCode);
     }
 
     /// <summary>
