@@ -150,7 +150,7 @@ public abstract class BasicRestClient
             return result.Data;
         }
 
-        Logger.LogError("Could not deserialize response content {content}. The error {error} and exception {@exception}", 
+        Logger.LogError("Could not deserialize response content {$content}. The error {$error} and exception {@exception}", 
             result.Content, result.ErrorMessage, result.ErrorException);
 
         throw new ResponseDeserializeException();
@@ -162,7 +162,7 @@ public abstract class BasicRestClient
     /// <param name="restRequest"></param>
     protected void LogRequestBeforeSending(RestRequest restRequest)
     {
-        Logger.LogInformation("A {httpMethod} request is about to send to {uri}",
+        Logger.LogInformation("A {$httpMethod} request is about to send to {$uri}",
             restRequest.Method,
             restRequest.Resource);
     }
@@ -173,7 +173,7 @@ public abstract class BasicRestClient
     /// <param name="restResponse"></param>
     protected void LogResponseReceived(RestResponse restResponse)
     {
-        Logger.LogInformation("A response received with status {status}", restResponse.StatusCode);
+        Logger.LogInformation("A response received with status {$status}", restResponse.StatusCode);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public abstract class BasicRestClient
     {
         using (Logger.BeginScope("Request_Response_Log"))
         {
-            Logger.LogInformation("A {httpMethod} request to {uri} in {executionTime} ms with parameters {@parameters} has been sent with response status {status} and content: {content}",
+            Logger.LogInformation("A {$httpMethod} request to {$uri} in {$executionTime} ms with parameters {@parameters} has been sent with response status {$status} and content: {$content}",
                 restRequest.Method,
                 restRequest.Resource,
                 executionTime.TotalMilliseconds,
@@ -204,7 +204,7 @@ public abstract class BasicRestClient
     protected void LogFailedResponseReceived(RestRequest restRequest, RestResponse restResponse)
     {
         Logger.LogError(restResponse.ErrorException,
-            "A {httpMethod} request to {uri} with parameters {@parameters} has been failed with status {status} and error: {error} and content: {content}",
+            "A {$httpMethod} request to {$uri} with parameters {@parameters} has been failed with status {$status} and error: {$error} and content: {$content}",
             restRequest.Method,
             restRequest.Resource,
             restRequest.Parameters.ToList(),
