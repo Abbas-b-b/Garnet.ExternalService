@@ -97,7 +97,7 @@ public class RequestUtility
                     continue;
                 }
 
-                if (request.Resource.Contains(prop.Name))
+                if (request.Resource.Contains("{" + prop.Name + "}"))
                 {
                     request.AddUrlSegment(prop.Name, value);
                 }
