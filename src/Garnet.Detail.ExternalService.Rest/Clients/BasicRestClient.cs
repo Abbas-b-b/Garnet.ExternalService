@@ -191,7 +191,7 @@ public abstract class BasicRestClient
     {
         using (Logger.BeginScope("Request_Response_Log"))
         {
-            Logger.LogInformation("A {$httpMethod} request to {$baseUri} with route {$route} in {$executionTime} ms with parameters {@parameters} has been sent with response status {$status} and content: {$content}",
+            Logger.LogInformation("A {$httpMethod} request to {$baseUri} with path {$uri} in {$executionTime} ms with parameters {@parameters} has been sent with response status {$status} and content: {$content}",
                 restRequest.Method,
                 Client.Options.BaseUrl,
                 restRequest.Resource,
@@ -210,7 +210,7 @@ public abstract class BasicRestClient
     protected void LogFailedResponseReceived(RestRequest restRequest, RestResponse restResponse)
     {
         Logger.LogError(restResponse.ErrorException, 
-            "A {$httpMethod} request to {$baseUri} with route {$uri} with parameters {@parameters} has been failed with status {$status} and error: {$error} and content: {$content}",
+            "A {$httpMethod} request to {$baseUri} with path {$uri} with parameters {@parameters} has been failed with status {$status} and error: {$error} and content: {$content}",
             restRequest.Method,
             Client.Options.BaseUrl,
             restRequest.Resource,
