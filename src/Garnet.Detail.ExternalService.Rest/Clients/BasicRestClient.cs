@@ -198,7 +198,7 @@ public abstract class BasicRestClient
                 executionTime.TotalMilliseconds,
                 restRequest.Parameters.ToList(),
                 restResponse.StatusCode,
-                restResponse.Content);
+                GetRestResponseContentForLog(restResponse));
         }
     }
 
@@ -217,6 +217,23 @@ public abstract class BasicRestClient
             restRequest.Parameters.ToList(),
             restResponse.StatusCode,
             restResponse.ErrorMessage,
-            restResponse.Content);
+            GetRestResponseContentForLog(restResponse));
+    }
+
+    /// <summary>
+    /// To get <paramref name="restResponse"/> content according to the response content-type
+    /// </summary>
+    /// <param name="restResponse">The response</param>
+    /// <returns></returns>
+    protected virtual string GetRestResponseContentForLog(RestResponse restResponse)
+    {
+        if (restResponse?.ContentType is not null
+            && ClientConfiguration.ResponseContentTypeWhitelistForLogging?.Any(
+                contentTypes => restResponse.ContentType.ToLower().Contains(contentTypes.ToLower())) == true)
+        {
+            return restResponse.Content;
+        }
+
+        return "*** EXCLUDED RESPONSE CONTENT ***";
     }
 }
