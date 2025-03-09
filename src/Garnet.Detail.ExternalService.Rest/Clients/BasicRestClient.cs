@@ -165,7 +165,7 @@ public abstract class BasicRestClient
     /// 
     /// </summary>
     /// <param name="restRequest"></param>
-    protected void LogRequestBeforeSending(RestRequest restRequest)
+    protected virtual void LogRequestBeforeSending(RestRequest restRequest)
     {
         Logger.LogDebug("A {$httpMethod} request is about to send to {$uri}",
             restRequest.Method,
@@ -176,7 +176,7 @@ public abstract class BasicRestClient
     /// 
     /// </summary>
     /// <param name="restResponse"></param>
-    protected void LogResponseReceived(RestResponse restResponse)
+    protected virtual void LogResponseReceived(RestResponse restResponse)
     {
         Logger.LogDebug("A response received with status {$status}", restResponse.StatusCode);
     }
@@ -187,7 +187,7 @@ public abstract class BasicRestClient
     /// <param name="restRequest"></param>
     /// <param name="restResponse"></param>
     /// <param name="executionTime"></param>
-    protected void LogRequestResponse(RestRequest restRequest, RestResponse restResponse, TimeSpan executionTime)
+    protected virtual void LogRequestResponse(RestRequest restRequest, RestResponse restResponse, TimeSpan executionTime)
     {
         using (Logger.BeginScope("Request_Response_Log"))
         {
@@ -207,7 +207,7 @@ public abstract class BasicRestClient
     /// </summary>
     /// <param name="restRequest"></param>
     /// <param name="restResponse"></param>
-    protected void LogFailedResponseReceived(RestRequest restRequest, RestResponse restResponse)
+    protected virtual void LogFailedResponseReceived(RestRequest restRequest, RestResponse restResponse)
     {
         Logger.LogError(restResponse.ErrorException, 
             "A {$httpMethod} request to {$baseUri} with path {$uri} with parameters {@parameters} has been failed with status {$status} and error: {$error} and content: {$content}",
