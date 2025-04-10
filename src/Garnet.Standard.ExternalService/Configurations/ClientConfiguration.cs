@@ -30,5 +30,6 @@ public class ClientConfiguration
         "text/x-json",
         "text/xml",
         "text/plain",
+	"text/html",
     };
 }
