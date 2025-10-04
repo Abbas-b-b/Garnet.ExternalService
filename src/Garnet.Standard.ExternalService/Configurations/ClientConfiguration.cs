@@ -13,6 +13,16 @@ public class ClientConfiguration
     public string BaseUri { get; set; }
 
     /// <summary>
+    /// Proxy address for request on the client
+    /// </summary>
+    public string ProxyAddress { get; set; }
+    
+    /// <summary>
+    /// Set this to true to ignore server certificate validation
+    /// </summary>
+    public bool IgnoreCertificateValidation { get; set; }
+
+    /// <summary>
     /// Indicates request response logging
     /// </summary>
     public bool LogRequestResponseWithContents { get; set; } = true;
@@ -30,6 +40,6 @@ public class ClientConfiguration
         "text/x-json",
         "text/xml",
         "text/plain",
-	"text/html",
+	    "text/html",
     };
 }
